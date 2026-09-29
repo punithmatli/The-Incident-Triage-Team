@@ -17,4 +17,9 @@ def synthesizer(state: IncidentState):
     messages = [SystemMessage(content=sys_prompt), HumanMessage(content=context)]
     response = llm.invoke(messages)
     
-    return {"final_report": response.content}
+    # Extract the text string if the model returns a multi-modal list block
+    content = response.content
+    if isinstance(content, list):
+        content = content[0]["text"]
+        
+    return {"final_report": content}
